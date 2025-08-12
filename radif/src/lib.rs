@@ -1,4 +1,4 @@
-pub use adif_macros::*;
+pub use radif_macros::*;
 mod data;
 mod enumerations;
 mod error;
