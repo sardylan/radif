@@ -1,13 +1,17 @@
 [package]
 name = "adif_macros"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 authors = ["Luca Cireddu <sardylan@gmail.com>"]
 description = "Macros for ADIF format parsing and serialization."
 license = "GPL-3"
 readme = "README.md"
 repository = "https://github.com/sardylan/radif.git"
-keywords = ["ADIF", "radio", "hamradio", "ham", "logbook"]
+keywords = ["ADIF", "macros", "hamradio", "ham", "internal"]
+categories = ["development-tools::procedural-macro-helpers"]
+
+[package.metadata.docs.rs]
+targets = []
 
 [dependencies]
 syn = "2.0.104"
