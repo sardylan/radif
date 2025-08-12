@@ -1,6 +1,8 @@
 # radif
 
-> Rust ADIF format library for parsing and serialization.
+Rust ADIF format library for parsing and serialization.
+
+[![Tests](https://github.com/sardylan/radif/actions/workflows/tests.yml/badge.svg)](https://github.com/sardylan/radif/actions/workflows/tests.yml)
 
 ## Amateur Data Interchange Format
 
