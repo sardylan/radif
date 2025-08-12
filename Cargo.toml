@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "adif_macros",
+    "radif"
+]
+resolver = "2"

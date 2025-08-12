@@ -1,0 +1,15 @@
+[package]
+name = "radif"
+version = "0.1.0"
+edition = "2024"
+authors = ["Luca Cireddu <sardylan@gmail.com>"]
+description = "Rust ADIF format library for parsing and serialization."
+license = "GPL-3"
+readme = "README.md"
+repository = "https://github.com/sardylan/radif.git"
+keywords = ["ADIF", "radio", "hamradio", "ham", "logbook"]
+
+[dependencies]
+adif_macros = { path = "../adif_macros" }
+futures = "0.3.31"
+chrono = "0.4.41"
