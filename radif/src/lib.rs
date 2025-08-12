@@ -1,9 +1,10 @@
+pub use adif_macros::*;
 mod data;
 mod enumerations;
 mod error;
+mod field;
 mod fields;
 mod header;
 mod qso;
 mod result;
 mod utilities;
-mod field;

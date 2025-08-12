@@ -1,6 +1,10 @@
 [workspace]
-members = [
-    "adif_macros",
-    "radif"
-]
+members = ["radif_macros", "radif"]
 resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Luca Cireddu <sardylan@gmail.com>"]
+license = "GPL-3.0"
+repository = "https://github.com/sardylan/radif.git"
+edition = "2021"
