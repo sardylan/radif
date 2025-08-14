@@ -109,7 +109,7 @@ impl AdifData for DataValue {
         }
     }
 
-    fn deserialize(value: &str) -> result::Result<Self>
+    fn deserialize(_value: &str) -> result::Result<Self>
     where
         Self: Sized,
     {
@@ -127,6 +127,7 @@ impl Display for DataValue {
 }
 
 impl DataValue {
+    #[allow(dead_code)]
     pub fn to_char(&self) -> Option<char> {
         match self {
             DataValue::Boolean(_) => Some('B'),

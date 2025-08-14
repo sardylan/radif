@@ -48,10 +48,6 @@ impl Point {
             latitude,
         }
     }
-
-    pub fn to_tuple(&self) -> (f64, f64) {
-        (self.longitude, self.latitude)
-    }
 }
 
 pub async fn locator_to_coordinates(locator: &str) -> result::Result<Point> {

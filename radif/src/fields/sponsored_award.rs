@@ -1,7 +1,7 @@
 use crate::data::AdifData;
 use crate::error::AdifError;
 use crate::result;
-use adif_macros::{AdifData, AutoDisplay};
+use radif_macros::{AdifData, AutoDisplay};
 use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, AdifData, AutoDisplay)]

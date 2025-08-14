@@ -6,7 +6,7 @@ use crate::enumerations::EnumerationType::{
 use crate::error::AdifError;
 use crate::field::FieldName;
 use crate::fields::data::DataType;
-use adif_macros::{AdifData, AutoDisplay};
+use radif_macros::{AdifData, AutoDisplay};
 use std::string::String;
 
 #[derive(Debug, Clone, PartialEq, Eq, AutoDisplay, AdifData)]

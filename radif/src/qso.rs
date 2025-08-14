@@ -1,5 +1,5 @@
 use crate::data::AdifData;
-use crate::field::{Field, FieldName};
+use crate::field::Field;
 use crate::fields::data::DataValue;
 use crate::fields::qso::QSOFieldName;
 use std::fmt::{Display, Formatter};

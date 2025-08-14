@@ -1,6 +1,6 @@
 use crate::data::AdifData;
 use crate::error::AdifError;
-use adif_macros::{AdifData, AutoDisplay, AutoTestEnum};
+use radif_macros::{AdifData, AutoDisplay, AutoTestEnum};
 
 #[derive(Debug, Clone, PartialEq, Eq, AutoDisplay, AdifData, AutoTestEnum)]
 pub enum ArrlSection {
