@@ -39,6 +39,7 @@ pub enum DataType {
     SecondaryAdministrativeSubdivisionListAlt,
     SotaRef,
     WwffRef,
+    Null,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -71,6 +72,7 @@ pub enum DataValue {
     SecondaryAdministrativeSubdivisionListAlt(Vec<String>),
     SotaRef(String),
     WwffRef(String),
+    Null(),
 }
 
 impl AdifData for DataValue {
@@ -106,6 +108,7 @@ impl AdifData for DataValue {
             }
             DataValue::SotaRef(v) => format!("{}", *v),
             DataValue::WwffRef(v) => format!("{}", *v),
+            DataValue::Null() => "".to_string(),
         }
     }
 
@@ -216,6 +219,7 @@ impl DataValue {
             }
             DataType::SotaRef => Ok(DataValue::SotaRef(value.to_string())),
             DataType::WwffRef => Ok(DataValue::WwffRef(value.to_string())),
+            DataType::Null => Ok(DataValue::Null()),
         }
     }
 }

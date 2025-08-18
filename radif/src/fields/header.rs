@@ -14,6 +14,7 @@ pub enum HeaderFieldName {
     PROGRAMVERSION,
     APP, // # TODO: Application specific field, can be used for any application-specific data
     USERDEF(u32),
+    EOH,
 }
 
 impl AdifData for HeaderFieldName {
@@ -25,6 +26,7 @@ impl AdifData for HeaderFieldName {
             HeaderFieldName::PROGRAMVERSION => "PROGRAMVERSION".to_string(),
             HeaderFieldName::APP => "APP".to_string(), // TODO: Application specific field
             HeaderFieldName::USERDEF(value) => format!("USERDEF:{}", value),
+            HeaderFieldName::EOH => "EOH".to_string(),
         }
     }
 
@@ -42,6 +44,7 @@ impl AdifData for HeaderFieldName {
                 Ok(num) => Ok(HeaderFieldName::USERDEF(num)),
                 Err(_) => Err(DeserializeError("Invalid USERDEF value".to_string())),
             },
+            "EOH" => Ok(HeaderFieldName::EOH),
             &_ => Err(DeserializeError("Unknown header field name".to_string())),
         }
     }
@@ -56,6 +59,7 @@ impl FieldName for HeaderFieldName {
             HeaderFieldName::PROGRAMVERSION => DataType::String,
             HeaderFieldName::APP => DataType::String, // TODO: Application specific field
             HeaderFieldName::USERDEF(_) => DataType::String,
+            HeaderFieldName::EOH => DataType::Null,
         }
     }
 }
@@ -83,6 +87,7 @@ mod tests {
             "PROGRAMVERSION"
         );
         assert_eq!(HeaderFieldName::USERDEF(42).serialize(), "USERDEF:42");
+        assert_eq!(HeaderFieldName::EOH.serialize(), "EOH");
     }
 
     #[test]
@@ -106,6 +111,10 @@ mod tests {
         assert_eq!(
             HeaderFieldName::deserialize("USERDEF42").unwrap(),
             HeaderFieldName::USERDEF(42)
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("EOH").unwrap(),
+            HeaderFieldName::EOH
         );
         assert!(HeaderFieldName::deserialize("INVALID").is_err());
     }

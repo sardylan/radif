@@ -192,6 +192,7 @@ pub enum QSOFieldName {
     VUCC_GRIDS,
     WEB,
     WWFF_REF,
+    EOR,
 }
 
 impl FieldName for QSOFieldName {
@@ -377,6 +378,7 @@ impl FieldName for QSOFieldName {
             QSOFieldName::VUCC_GRIDS => DataType::GridSquareList,
             QSOFieldName::WEB => DataType::String,
             QSOFieldName::WWFF_REF => DataType::WwffRef,
+            QSOFieldName::EOR => DataType::Null,
         }
     }
 }

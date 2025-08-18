@@ -2,7 +2,7 @@ use crate::data::AdifData;
 use crate::error::AdifError::DeserializeError;
 use crate::fields::data::{DataType, DataValue};
 
-pub trait FieldName: AdifData {
+pub trait FieldName: AdifData + PartialEq {
     fn get_data_type(&self) -> DataType;
 
     fn get_value_type_char(&self) -> Option<String> {
@@ -10,13 +10,17 @@ pub trait FieldName: AdifData {
     }
 }
 
-pub trait Field: AdifData {
+pub trait Field: AdifData + PartialEq {
     type FN: FieldName;
 
     fn get_name(&self) -> &Self::FN;
     fn get_value(&self) -> &DataValue;
 
+    fn get_name_end(&self) -> &Self::FN;
+
     fn new(name: Self::FN, value: DataValue) -> Self;
+
+    fn end() -> Self;
 }
 
 impl<T: Field> AdifData for T {
@@ -31,6 +35,8 @@ impl<T: Field> AdifData for T {
                 value.len(),
                 value
             )
+        } else if self.get_name() == self.get_name_end() {
+            format!("<{}>", self.get_name().serialize())
         } else {
             format!("<{}:{}>{}", self.get_name().serialize(), value.len(), value)
         }

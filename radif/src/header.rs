@@ -1,4 +1,6 @@
+use crate::adif::AdifItem;
 use crate::data::AdifData;
+use crate::error::AdifError;
 use crate::field::Field;
 use crate::fields::data::DataValue;
 use crate::fields::header::HeaderFieldName;
@@ -22,6 +24,10 @@ impl Field for HeaderField {
         &self.value
     }
 
+    fn get_name_end(&self) -> &Self::FN {
+        &HeaderFieldName::EOH
+    }
+
     fn new(name: Self::FN, value: DataValue) -> Self {
         match name {
             HeaderFieldName::USERDEF(n) => Self {
@@ -41,6 +47,14 @@ impl Field for HeaderField {
             },
         }
     }
+
+    fn end() -> Self {
+        Self {
+            name: HeaderFieldName::EOH,
+            value: DataValue::Null(),
+            number: None,
+        }
+    }
 }
 
 impl Display for HeaderField {
@@ -49,20 +63,170 @@ impl Display for HeaderField {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct Header {
+    header: Vec<HeaderField>,
+}
+
+impl AdifItem for Header {
+    fn add_end_if_missing(&self) -> Self {
+        self.header
+            .last()
+            .map_or_else(|| true, |last| last.name != HeaderFieldName::EOH)
+            .then(|| Self {
+                header: self
+                    .header
+                    .iter()
+                    .cloned()
+                    .chain(std::iter::once(HeaderField::end()))
+                    .collect(),
+            })
+            .unwrap_or_else(|| self.clone())
+    }
+}
+
+impl Display for Header {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.serialize())
+    }
+}
+
+impl AdifData for Header {
+    fn serialize(&self) -> String {
+        self.header
+            .iter()
+            .map(HeaderField::serialize)
+            .collect::<Vec<String>>()
+            .join("")
+    }
+
+    fn deserialize(_value: &str) -> crate::result::Result<Self>
+    where
+        Self: Sized,
+    {
+        Err(AdifError::DeserializeError(
+            "QSO deserialization not implemented".to_string(),
+        ))
+    }
+}
+
+impl TryFrom<Vec<HeaderField>> for Header {
+    type Error = AdifError;
+
+    fn try_from(value: Vec<HeaderField>) -> Result<Self, Self::Error> {
+        Ok(Self { header: value })
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::adif::AdifItem;
     use crate::data::AdifData;
     use crate::field::Field;
     use crate::fields::data::DataValue;
     use crate::fields::header::HeaderFieldName;
-    use crate::header::HeaderField;
+    use crate::header::{Header, HeaderField};
 
     #[test]
-    fn test_valid() {
+    fn test_header_field_serialize() {
         let field = HeaderField::new(
             HeaderFieldName::PROGRAMID,
             DataValue::String("Test".to_string()),
         );
         assert_eq!(field.serialize(), "<PROGRAMID:4>Test");
+    }
+
+    #[test]
+    fn test_qso_field_deserialize_valid() {
+        let input = "<PROGRAMID:4>Test";
+        let expected = HeaderField::new(
+            HeaderFieldName::PROGRAMID,
+            DataValue::String("Test".to_string()),
+        );
+        let actual = HeaderField::deserialize(input).unwrap();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn test_qso_field_deserialize_invalid() {
+        assert_eq!(HeaderField::deserialize("").is_err(), true);
+        assert_eq!(HeaderField::deserialize("<>").is_err(), true);
+        assert_eq!(HeaderField::deserialize("<PROGRAMID>Test").is_err(), true);
+        assert_eq!(HeaderField::deserialize("<PROGRAMID:>Test").is_err(), true);
+        assert_eq!(HeaderField::deserialize("<INVALID:6>Test").is_err(), true);
+    }
+
+    #[test]
+    fn test_qso_add_end_if_missing_add() {
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string();
+        let input = Header::try_from(vec![
+            HeaderField::new(
+                HeaderFieldName::PROGRAMID,
+                DataValue::String("Test".to_string()),
+            ),
+            HeaderField::new(
+                HeaderFieldName::CREATED_TIMESTAMP,
+                DataValue::String(now.clone()),
+            ),
+        ])
+        .unwrap();
+        let expected = Header::try_from(vec![
+            HeaderField::new(
+                HeaderFieldName::PROGRAMID,
+                DataValue::String("Test".to_string()),
+            ),
+            HeaderField::new(HeaderFieldName::CREATED_TIMESTAMP, DataValue::String(now)),
+            HeaderField::end(),
+        ])
+        .unwrap();
+        let actual = input.add_end_if_missing();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn test_qso_add_end_if_missing_already_present() {
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string();
+        let input = Header::try_from(vec![
+            HeaderField::new(
+                HeaderFieldName::PROGRAMID,
+                DataValue::String("IS0GVH".to_string()),
+            ),
+            HeaderField::new(HeaderFieldName::CREATED_TIMESTAMP, DataValue::String(now)),
+            HeaderField::end(),
+        ])
+        .unwrap();
+        let expected = input.clone();
+        let actual = input.add_end_if_missing();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn test_qso_serialize() {
+        let now = chrono::Utc::now()
+            .format("%Y-%m-%dT%H:%M:%S%.3fZ")
+            .to_string();
+        let input = Header::try_from(vec![
+            HeaderField::new(
+                HeaderFieldName::PROGRAMID,
+                DataValue::String("Test".to_string()),
+            ),
+            HeaderField::new(
+                HeaderFieldName::CREATED_TIMESTAMP,
+                DataValue::String(now.clone()),
+            ),
+            HeaderField::end(),
+        ])
+        .unwrap();
+        let expected = format!(
+            "<PROGRAMID:4>Test<CREATED_TIMESTAMP:{}>{}<EOH>",
+            now.len(),
+            now
+        );
+        let actual = input.serialize();
+        assert_eq!(expected, actual);
     }
 }

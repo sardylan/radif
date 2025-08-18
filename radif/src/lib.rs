@@ -8,3 +8,5 @@ mod header;
 mod qso;
 mod result;
 mod utilities;
+mod file;
+mod adif;
