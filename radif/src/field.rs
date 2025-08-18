@@ -48,31 +48,31 @@ impl<T: Field> AdifData for T {
     {
         if !string.starts_with("<") {
             return Err(DeserializeError(
-                "Invalid QSOField format: missing '<' at the start".to_string(),
+                "Invalid field format: missing '<' at the start".to_string(),
             ));
         }
 
         let end_index = string
             .find('>')
-            .ok_or_else(|| DeserializeError("Invalid QSOField format: missing '>'".to_string()))?;
+            .ok_or_else(|| DeserializeError("Invalid field format: missing '>'".to_string()))?;
         let header = &string[1..end_index];
         let parts: Vec<&str> = header.split(':').collect();
         if parts.len() < 2 {
             return Err(DeserializeError(
-                "Invalid QSOField format: expected at least two parts in header".to_string(),
+                "Invalid field format: expected at least two parts in header".to_string(),
             ));
         }
         let name = T::FN::deserialize(parts[0])?;
 
         let value_idx = if parts.len() == 2 { 1 } else { 2 };
         let value_length: usize = parts[value_idx].parse().map_err(|_| {
-            DeserializeError("Invalid QSOField format: value length is not a number".to_string())
+            DeserializeError("Invalid field format: value length is not a number".to_string())
         })?;
 
         let value_str = &string[end_index + 1..end_index + 1 + value_length];
         if value_str.len() != value_length {
             return Err(DeserializeError(format!(
-                "Invalid QSOField format: value length mismatch, expected {}, got {}",
+                "Invalid field format: value length mismatch, expected {}, got {}",
                 value_length,
                 value_str.len()
             )));

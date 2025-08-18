@@ -25,7 +25,7 @@ impl AdifData for HeaderFieldName {
             HeaderFieldName::PROGRAMID => "PROGRAMID".to_string(),
             HeaderFieldName::PROGRAMVERSION => "PROGRAMVERSION".to_string(),
             HeaderFieldName::APP => "APP".to_string(), // TODO: Application specific field
-            HeaderFieldName::USERDEF(value) => format!("USERDEF:{}", value),
+            HeaderFieldName::USERDEF(value) => format!("USERDEF{}", value),
             HeaderFieldName::EOH => "EOH".to_string(),
         }
     }
@@ -86,7 +86,7 @@ mod tests {
             HeaderFieldName::PROGRAMVERSION.serialize(),
             "PROGRAMVERSION"
         );
-        assert_eq!(HeaderFieldName::USERDEF(42).serialize(), "USERDEF:42");
+        assert_eq!(HeaderFieldName::USERDEF(42).serialize(), "USERDEF42");
         assert_eq!(HeaderFieldName::EOH.serialize(), "EOH");
     }
 

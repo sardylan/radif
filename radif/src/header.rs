@@ -68,6 +68,12 @@ pub struct Header {
     header: Vec<HeaderField>,
 }
 
+impl Header {
+    pub fn len(&self) -> usize {
+        self.header.len()
+    }
+}
+
 impl AdifItem for Header {
     fn add_end_if_missing(&self) -> Self {
         self.header
@@ -137,7 +143,7 @@ mod tests {
     }
 
     #[test]
-    fn test_qso_field_deserialize_valid() {
+    fn test_header_field_deserialize_valid() {
         let input = "<PROGRAMID:4>Test";
         let expected = HeaderField::new(
             HeaderFieldName::PROGRAMID,
@@ -148,7 +154,7 @@ mod tests {
     }
 
     #[test]
-    fn test_qso_field_deserialize_invalid() {
+    fn test_header_field_deserialize_invalid() {
         assert_eq!(HeaderField::deserialize("").is_err(), true);
         assert_eq!(HeaderField::deserialize("<>").is_err(), true);
         assert_eq!(HeaderField::deserialize("<PROGRAMID>Test").is_err(), true);
@@ -157,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn test_qso_add_end_if_missing_add() {
+    fn test_header_add_end_if_missing_add() {
         let now = chrono::Utc::now()
             .format("%Y-%m-%dT%H:%M:%S%.3fZ")
             .to_string();
@@ -186,7 +192,7 @@ mod tests {
     }
 
     #[test]
-    fn test_qso_add_end_if_missing_already_present() {
+    fn test_header_add_end_if_missing_already_present() {
         let now = chrono::Utc::now()
             .format("%Y-%m-%dT%H:%M:%S%.3fZ")
             .to_string();
@@ -205,7 +211,7 @@ mod tests {
     }
 
     #[test]
-    fn test_qso_serialize() {
+    fn test_header_serialize() {
         let now = chrono::Utc::now()
             .format("%Y-%m-%dT%H:%M:%S%.3fZ")
             .to_string();
