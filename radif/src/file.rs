@@ -61,12 +61,12 @@ impl Default for State {
     }
 }
 
-pub async fn parse<R>(reader: R) -> result::Result<Adif>
+pub async fn parse<R>(mut reader: R) -> result::Result<Adif>
 where
     R: AsyncRead + Unpin,
 {
     Ok(async_stream::stream! {
-        let mut reader = BufReader::new(reader);
+        // let mut reader = BufReader::new(reader);
         let mut char = [0u8;1];
         loop {
             match reader.read(&mut char).await {
