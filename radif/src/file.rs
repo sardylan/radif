@@ -209,6 +209,7 @@ mod tests {
     use super::*;
     use crate::fields::data::DataValue;
     use crate::fields::header::HeaderFieldName;
+    use crate::fields::qso::QSOFieldName;
     use crate::header::Header;
     use futures::executor::block_on;
 
@@ -376,6 +377,279 @@ mod tests {
                 ])
                 .unwrap(),
                 ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_first_char() {
+        let input_state = State {
+            field_state: FieldState::LookingForBeginning,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = '<';
+        let expected = State {
+            field_state: FieldState::InTag,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "<".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_second_char() {
+        let input_state = State {
+            field_state: FieldState::InTag,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "<CALL".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = ':';
+        let expected = State {
+            field_state: FieldState::InTag,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "<CALL:".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_last_tag_char() {
+        let input_state = State {
+            field_state: FieldState::InTag,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "<CALL:6".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = '>';
+        let expected = State {
+            field_state: FieldState::InValue,
+            adif_state: AdifState::InQso,
+            counter: 6,
+            buffer: "<CALL:6>".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_fisrt_value_char() {
+        let input_state = State {
+            field_state: FieldState::InValue,
+            adif_state: AdifState::InQso,
+            counter: 6,
+            buffer: "<CALL:6>".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = 'I';
+        let expected = State {
+            field_state: FieldState::InValue,
+            adif_state: AdifState::InQso,
+            counter: 5,
+            buffer: "<CALL:6>I".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_last_value_char() {
+        let input_state = State {
+            field_state: FieldState::InValue,
+            adif_state: AdifState::InQso,
+            counter: 1,
+            buffer: "<CALL:6>IS0GV".to_string(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = 'H';
+        let expected = State {
+            field_state: FieldState::LookingForBeginning,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "".to_string(),
+            qso: QSO::try_from(vec![QSOField::new(
+                QSOFieldName::CALL,
+                DataValue::String("IS0GVH".to_string()),
+            )])
+            .unwrap(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_parse_adif_char_qso_last_eor_char() {
+        let input_state = State {
+            field_state: FieldState::InTag,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "<EOR".to_string(),
+            qso: QSO::try_from(vec![QSOField::new(
+                QSOFieldName::CALL,
+                DataValue::String("IS0GVH".to_string()),
+            )])
+            .unwrap(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                ..Adif::default()
+            },
+            ..State::default()
+        };
+        let input_char = '>';
+        let expected = State {
+            field_state: FieldState::LookingForBeginning,
+            adif_state: AdifState::InQso,
+            counter: 0,
+            buffer: "".to_string(),
+            qso: QSO::default(),
+            adif: Adif {
+                header: Header::try_from(vec![
+                    HeaderField::new(
+                        HeaderFieldName::PROGRAMID,
+                        DataValue::String("test".to_string()),
+                    ),
+                    HeaderField::new(HeaderFieldName::EOH, DataValue::Null()),
+                ])
+                .unwrap(),
+                qso: vec![QSO::try_from(vec![
+                    QSOField::new(QSOFieldName::CALL, DataValue::String("IS0GVH".to_string())),
+                    QSOField::new(QSOFieldName::EOR, DataValue::Null()),
+                ])
+                .unwrap()],
             },
             ..State::default()
         };
