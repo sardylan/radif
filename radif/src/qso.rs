@@ -12,6 +12,15 @@ pub struct QSOField {
     value: DataValue,
 }
 
+impl Default for QSOField {
+    fn default() -> Self {
+        Self {
+            name: QSOFieldName::EOR,
+            value: DataValue::Null(),
+        }
+    }
+}
+
 impl Field for QSOField {
     type FN = QSOFieldName;
 
@@ -50,7 +59,15 @@ pub struct QSO {
     qso: Vec<QSOField>,
 }
 
+impl Default for QSO {
+    fn default() -> Self {
+        Self { qso: vec![] }
+    }
+}
+
 impl AdifItem for QSO {
+    type Field = QSOField;
+
     fn add_end_if_missing(&self) -> Self {
         self.qso
             .last()
@@ -64,6 +81,17 @@ impl AdifItem for QSO {
                     .collect(),
             })
             .unwrap_or_else(|| self.clone())
+    }
+
+    fn add_field(&self, field: &Self::Field) -> Self {
+        Self {
+            qso: self
+                .qso
+                .clone()
+                .into_iter()
+                .chain(std::iter::once(field.clone()))
+                .collect(),
+        }
     }
 }
 

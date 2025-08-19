@@ -1,16 +1,30 @@
 use crate::data::AdifData;
+use crate::field::Field;
 use crate::header::Header;
 use crate::qso::QSO;
 use std::fmt::{Debug, Display, Formatter};
 
-pub trait AdifItem: AdifData + Debug + Clone + PartialEq {
+pub trait AdifItem: AdifData + Debug + Clone + PartialEq + Default {
+    type Field: Field;
+
     fn add_end_if_missing(&self) -> Self;
+
+    fn add_field(&self, field: &Self::Field) -> Self;
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Adif {
     pub header: Header,
     pub qso: Vec<QSO>,
+}
+
+impl Default for Adif {
+    fn default() -> Self {
+        Self {
+            header: Header::default(),
+            qso: vec![],
+        }
+    }
 }
 
 impl AdifData for Adif {

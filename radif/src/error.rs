@@ -19,3 +19,5 @@ impl Display for AdifError {
 }
 
 impl Error for AdifError {}
+
+// impl From<> for AdifError {}

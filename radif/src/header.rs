@@ -13,6 +13,16 @@ pub struct HeaderField {
     number: Option<u32>,
 }
 
+impl Default for HeaderField {
+    fn default() -> Self {
+        HeaderField {
+            name: HeaderFieldName::EOH,
+            value: DataValue::Null(),
+            number: None,
+        }
+    }
+}
+
 impl Field for HeaderField {
     type FN = HeaderFieldName;
 
@@ -74,7 +84,17 @@ impl Header {
     }
 }
 
+impl Default for Header {
+    fn default() -> Self {
+        Self {
+            header: vec![],
+        }
+    }
+}
+
 impl AdifItem for Header {
+    type Field = HeaderField;
+
     fn add_end_if_missing(&self) -> Self {
         self.header
             .last()
@@ -88,6 +108,17 @@ impl AdifItem for Header {
                     .collect(),
             })
             .unwrap_or_else(|| self.clone())
+    }
+
+    fn add_field(&self, field: &Self::Field) -> Self {
+        Self {
+            header: self
+                .header
+                .clone()
+                .into_iter()
+                .chain(std::iter::once(field.clone()))
+                .collect(),
+        }
     }
 }
 

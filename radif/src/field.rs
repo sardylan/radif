@@ -10,7 +10,7 @@ pub trait FieldName: AdifData + PartialEq {
     }
 }
 
-pub trait Field: AdifData + PartialEq {
+pub trait Field: AdifData + PartialEq + Default {
     type FN: FieldName;
 
     fn get_name(&self) -> &Self::FN;
@@ -21,6 +21,10 @@ pub trait Field: AdifData + PartialEq {
     fn new(name: Self::FN, value: DataValue) -> Self;
 
     fn end() -> Self;
+
+    fn is_end(&self) -> bool {
+        self.get_name() == self.get_name_end()
+    }
 }
 
 impl<T: Field> AdifData for T {
