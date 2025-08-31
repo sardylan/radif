@@ -334,6 +334,24 @@ mod tests {
         let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
         assert_eq!(actual, expected);
     }
+    #[test]
+    fn test_parse_adif_char_header_value_start_tag_char() {
+        let input_state = State {
+            field_state: FieldState::InValue,
+            counter: 4,
+            buffer: "<PROGRAMID:4>".to_string(),
+            ..State::default()
+        };
+        let input_char = '<';
+        let expected = State {
+            field_state: FieldState::InValue,
+            counter: 3,
+            buffer: "<PROGRAMID:4><".to_string(),
+            ..State::default()
+        };
+        let actual = block_on(parse_adif_char(input_state, input_char)).unwrap();
+        assert_eq!(actual, expected);
+    }
 
     #[test]
     fn test_parse_adif_char_header_value_last_char() {
