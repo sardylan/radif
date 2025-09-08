@@ -22,7 +22,6 @@ use crate::field::Field;
 use crate::header::HeaderField;
 use crate::qso::{QSOField, QSO};
 use crate::result;
-use futures::io::BufReader;
 use futures::{AsyncRead, AsyncReadExt, TryStreamExt};
 
 #[derive(Debug, PartialEq)]

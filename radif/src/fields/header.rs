@@ -1,16 +1,16 @@
 /*
  * radif
  * Copyright (C) 2025 - Luca Cireddu (IS0GVH) <sardylan@gmail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -51,7 +51,7 @@ impl AdifData for HeaderFieldName {
     where
         Self: Sized,
     {
-        match value {
+        match value.to_uppercase().as_str() {
             "ADIF_VER" => Ok(HeaderFieldName::ADIF_VER),
             "CREATED_TIMESTAMP" => Ok(HeaderFieldName::CREATED_TIMESTAMP),
             "PROGRAMID" => Ok(HeaderFieldName::PROGRAMID),
@@ -62,7 +62,10 @@ impl AdifData for HeaderFieldName {
                 Err(_) => Err(DeserializeError("Invalid USERDEF value".to_string())),
             },
             "EOH" => Ok(HeaderFieldName::EOH),
-            &_ => Err(DeserializeError("Unknown header field name".to_string())),
+            &_ => Err(DeserializeError(format!(
+                "Unknown header field name: {}",
+                value
+            ))),
         }
     }
 }
@@ -108,7 +111,7 @@ mod tests {
     }
 
     #[test]
-    fn test_header_field_name_deserialize() {
+    fn test_header_field_name_deserialize_uppercase() {
         assert_eq!(
             HeaderFieldName::deserialize("ADIF_VER").unwrap(),
             HeaderFieldName::ADIF_VER
@@ -134,5 +137,34 @@ mod tests {
             HeaderFieldName::EOH
         );
         assert!(HeaderFieldName::deserialize("INVALID").is_err());
+    }
+
+    #[test]
+    fn test_header_field_name_deserialize_lowercase() {
+        assert_eq!(
+            HeaderFieldName::deserialize("adif_ver").unwrap(),
+            HeaderFieldName::ADIF_VER
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("created_timestamp").unwrap(),
+            HeaderFieldName::CREATED_TIMESTAMP
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("programid").unwrap(),
+            HeaderFieldName::PROGRAMID
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("programversion").unwrap(),
+            HeaderFieldName::PROGRAMVERSION
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("userdef42").unwrap(),
+            HeaderFieldName::USERDEF(42)
+        );
+        assert_eq!(
+            HeaderFieldName::deserialize("eoh").unwrap(),
+            HeaderFieldName::EOH
+        );
+        assert!(HeaderFieldName::deserialize("invalid").is_err());
     }
 }
