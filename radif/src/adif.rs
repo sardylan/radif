@@ -59,7 +59,7 @@ impl AdifData for Adif {
             .join("\n")
     }
 
-    fn deserialize(value: &str) -> crate::result::Result<Self>
+    fn deserialize(_value: &str) -> crate::result::Result<Self>
     where
         Self: Sized,
     {
