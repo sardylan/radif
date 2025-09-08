@@ -36,7 +36,7 @@ pub enum Award {
     CQWAZ_PHONE,
     #[adif("CQWAZ_RTTY")]
     CQWAZ_RTTY,
-    #[adif("CQWAZ_160m")]
+    #[adif("CQWAZ_160M")]
     CQWAZ_160m,
     #[adif("CQWPX")]
     CQWPX,

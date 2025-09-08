@@ -59,9 +59,9 @@ pub fn adif_enum_derive(input: TokenStream) -> TokenStream {
             }
 
             fn deserialize(value: &str) -> crate::result::Result<Self> {
-                match value {
+                match value.to_uppercase().as_str() {
                     #(#deserialize_arms)*
-                    _ => Err(AdifError::DeserializeError("Invalid value for deserialization".to_string())),
+                    _ => Err(AdifError::DeserializeError(format!("Invalid value for deserialization: {}", value))),
                 }
             }
         }

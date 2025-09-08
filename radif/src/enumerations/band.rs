@@ -21,70 +21,70 @@ use radif_macros::{AdifData, AutoDisplay, AutoTestEnum};
 
 #[derive(Debug, Clone, PartialEq, Eq, AutoDisplay, AdifData, AutoTestEnum)]
 pub enum Band {
-    #[adif("2190m")]
+    #[adif("2190M")]
     Band2190m,
-    #[adif("630m")]
+    #[adif("630M")]
     Band630m,
-    #[adif("560m")]
+    #[adif("560M")]
     Band560m,
-    #[adif("160m")]
+    #[adif("160M")]
     Band160m,
-    #[adif("80m")]
+    #[adif("80M")]
     Band80m,
-    #[adif("60m")]
+    #[adif("60M")]
     Band60m,
-    #[adif("40m")]
+    #[adif("40M")]
     Band40m,
-    #[adif("30m")]
+    #[adif("30M")]
     Band30m,
-    #[adif("20m")]
+    #[adif("20M")]
     Band20m,
-    #[adif("17m")]
+    #[adif("17M")]
     Band17m,
-    #[adif("15m")]
+    #[adif("15M")]
     Band15m,
-    #[adif("12m")]
+    #[adif("12M")]
     Band12m,
-    #[adif("10m")]
+    #[adif("10M")]
     Band10m,
-    #[adif("8m")]
+    #[adif("8M")]
     Band8m,
-    #[adif("6m")]
+    #[adif("6M")]
     Band6m,
-    #[adif("5m")]
+    #[adif("5M")]
     Band5m,
-    #[adif("4m")]
+    #[adif("4M")]
     Band4m,
-    #[adif("2m")]
+    #[adif("2M")]
     Band2m,
-    #[adif("1.25m")]
+    #[adif("1.25M")]
     Band1_25m,
-    #[adif("70cm")]
+    #[adif("70CM")]
     Band70cm,
-    #[adif("33cm")]
+    #[adif("33CM")]
     Band33cm,
-    #[adif("23cm")]
+    #[adif("23CM")]
     Band23cm,
-    #[adif("13cm")]
+    #[adif("13CM")]
     Band13cm,
-    #[adif("9cm")]
+    #[adif("9CM")]
     Band9cm,
-    #[adif("6cm")]
+    #[adif("6CM")]
     Band6cm,
-    #[adif("3cm")]
+    #[adif("3CM")]
     Band3cm,
-    #[adif("1.25cm")]
+    #[adif("1.25CM")]
     Band1_25cm,
-    #[adif("6mm")]
+    #[adif("6MM")]
     Band6mm,
-    #[adif("4mm")]
+    #[adif("4MM")]
     Band4mm,
-    #[adif("2.5mm")]
+    #[adif("2.5MM")]
     Band2_5mm,
-    #[adif("2mm")]
+    #[adif("2MM")]
     Band2mm,
-    #[adif("1mm")]
+    #[adif("1MM")]
     Band1mm,
-    #[adif("submm")]
+    #[adif("SUBMM")]
     Bandsubmm,
 }

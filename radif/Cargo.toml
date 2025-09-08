@@ -1,6 +1,6 @@
 [package]
 name = "radif"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 authors = ["Luca Cireddu <sardylan@gmail.com>"]
 description = "Rust ADIF format library for parsing and serialization."
@@ -11,7 +11,7 @@ keywords = ["ADIF", "radio", "hamradio", "ham", "logbook"]
 categories = ["data-structures", "parsing"]
 
 [dependencies]
-radif_macros = { version = "=1.0.0", path = "../radif_macros" }
+radif_macros = { version = "=1.1.0", path = "../radif_macros" }
 async-stream = "0.3.6"
 futures = "0.3.31"
 chrono = "0.4.41"

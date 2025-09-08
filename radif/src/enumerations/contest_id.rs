@@ -167,7 +167,7 @@ pub enum ContestId {
     HisMajestyTheKingofSpainSSBContest,
     #[adif("EA-PSK63")]
     EAPSK63,
-    #[adif("EA-RTTY(import-only)")]
+    #[adif("EA-RTTY")]
     UniondeRadioaficionadosEspanolesRTTYContestImport,
     #[adif("EA-SMRE-CW")]
     SuMajestadElReydeEspanaCW,
@@ -191,7 +191,7 @@ pub enum ContestId {
     UniondeRadioaficionadosEspanolesRTTYContest,
     #[adif("EPC-PSK63")]
     PSK63QSOParty,
-    #[adif("EUSprint")]
+    #[adif("EUSPRINT")]
     EUSprint,
     #[adif("EU-HF")]
     EUHFChampionship,
@@ -223,7 +223,7 @@ pub enum ContestId {
     ICWCMediumSpeedTest,
     #[adif("ID-QSO-PARTY")]
     IdahoQSOParty,
-    #[adif("ILQSOParty")]
+    #[adif("ILQSOPARTY")]
     IllinoisQSOParty,
     #[adif("IN-QSO-PARTY")]
     IndianaQSOParty,
@@ -325,7 +325,7 @@ pub enum ContestId {
     MDXAPSKDeathMatch,
     #[adif("QC-QSO-PARTY")]
     QuebecQSOParty,
-    #[adif("RAC(import-only)")]
+    #[adif("RAC")]
     CanadianAmateurRadioSocietyContest,
     #[adif("RAC-CANADA-DAY")]
     RACCanadaDayContest,
@@ -393,7 +393,7 @@ pub enum ContestId {
     PRCSPDXContestRTTY,
     #[adif("SPAR-WINTER-FD")]
     SPARWinterFieldDay,
-    #[adif("SPDXContest")]
+    #[adif("SPDXCONTEST")]
     SPDXContest,
     #[adif("SPRINGSPRINT")]
     FISTSSpringSprint,
@@ -435,7 +435,7 @@ pub enum ContestId {
     UKSMG6mMarathon,
     #[adif("UKSMG-SUMMER-ES")]
     UKSMGSummerEsContest,
-    #[adif("URE-DX(import-only)")]
+    #[adif("URE-DX")]
     UkrainianDXContest,
     #[adif("US-COUNTIES-QSO")]
     MobileAmateurAwardsClub,
