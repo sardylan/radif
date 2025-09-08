@@ -28,4 +28,6 @@ mod qso;
 mod result;
 mod utilities;
 
+pub use data::AdifData;
+pub use error::AdifError;
 pub use file::parse;
