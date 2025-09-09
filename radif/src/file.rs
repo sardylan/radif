@@ -83,6 +83,32 @@ where
     Ok(state.adif)
 }
 
+#[cfg(feature = "tokio")]
+pub async fn parse_tokio<R>(mut reader: R) -> result::Result<Adif>
+where
+    R: tokio::io::AsyncRead + Unpin,
+{
+    use tokio::io::AsyncReadExt;
+
+    let mut state = State::default();
+    let mut buffer = [0u8; 4096]; // Read in chunks for better performance
+
+    loop {
+        match reader.read(&mut buffer).await {
+            Ok(0) => break, // EOF
+            Ok(n) => {
+                for &byte in &buffer[..n] {
+                    let c = byte as char;
+                    parse_adif_char(&mut state, c)?;
+                }
+            }
+            Err(e) => return Err(DeserializeError(e.to_string())),
+        }
+    }
+
+    Ok(state.adif)
+}
+
 fn parse_adif_char(state: &mut State, c: char) -> result::Result<()> {
     match state.field_state {
         FieldState::LookingForBeginning => {
